@@ -12,7 +12,7 @@
     initialize:function(obj,type,initSlide)
     { 
       var bodyWidth = $("body").width();
-      slideShow.animationType = type;
+      slideShow.currentAnimation = type;
       slideShow.obj = obj;
       slideShow.currentSlide = initSlide;
       var outS = "";
@@ -40,9 +40,19 @@
       {
         prev = slideShow.obj.length;
       }
-      $("#slide" + slideIndex).stop().animate({"margin-left" : (bodyWidth * 2) + "px" },'slow').fadeOut(0);
-      $("#slide" + prev).stop().animate({"margin-left" :  "-" + bodyWidth + "px"},0).fadeIn(0).animate({"margin-left":"0px"},'slow');
-      slideShow.currentSlide = prev;
+      if (slideShow.currentAnimation == "fade")
+      {
+        $("#slide" + slideIndex).stop().fadeOut('slow');
+        $("#slide" + prev).stop().fadeIn('slow');
+        slideShow.currentSlide = prev;
+      }
+      else
+      {
+        $("#slide" + slideIndex).stop().animate({"margin-left" : (bodyWidth * 2) + "px" },'slow').fadeOut(0);
+        $("#slide" + prev).stop().animate({"margin-left" :  "-" + bodyWidth + "px"},0).fadeIn(0).animate({"margin-left":"0px"},'slow');
+        slideShow.currentSlide = prev;
+      }
+
     },
     goNext:function()
     {
@@ -53,9 +63,18 @@
       {
         next = 1;
       }
+      if (slideShow.currentAnimation == "fade")
+      {
+        $("#slide" + slideIndex).stop().fadeOut('slow');
+        $("#slide" + next).stop().fadeIn('slow');
+        slideShow.currentSlide  = next;
+      }
+      else
+      {
       $("#slide" + slideIndex).stop().animate({"margin-left" : "-" + bodyWidth + "px" },'slow').fadeOut(0);
       $("#slide" + next).stop().animate({"margin-left" : bodyWidth},0).fadeIn(0).animate({"margin-left":"0px"},'slow');
       slideShow.currentSlide  = next;
+      }
     },
     keyPrevNext:function(e)
     {
@@ -74,6 +93,7 @@
             break;
       }
     },
+    currentAnimation:"",
     currentSlide:0,
     obj:null
   }
